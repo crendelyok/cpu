@@ -1,0 +1,72 @@
+in
+push rax
+pop rsi
+
+call fib
+
+out
+end
+
+fib
+
+push rbp
+push rsp
+pop rbp
+push rsi
+
+push rsi
+push 3
+jb one
+
+pop r15
+pop r15
+
+push rsi
+push 1
+sub
+
+pop r15
+pop r15
+push rax
+pop rsi
+
+call fib
+
+push rax
+
+pop rbx
+pop rsi
+push rbx
+
+push rsi
+push 2
+sub
+
+pop r15
+push rax
+pop rsi
+
+call fib
+
+push rax
+
+pop rcx
+pop r15
+pop rbx
+push rcx
+push rbx
+add
+
+pop r15
+pop r15
+pop rbp
+ret
+
+one
+pop r15
+pop r15
+pop r15
+pop rbp
+push 1
+pop rax
+ret

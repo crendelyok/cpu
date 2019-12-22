@@ -25,9 +25,9 @@ struct label
 struct token
 {
         enum token_type {
-		#define TYPE(name, kword) name,
+		#define TOKEN_TYPE(name, kword) name,
 		#include "token_type.h"
-		#undef TYPE
+		#undef TOKEN_TYPE
 	}token_type;
 	enum is_kword {
 		UNDEF,

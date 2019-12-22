@@ -1,5 +1,4 @@
 #include "cpu.h"
-#include "stack.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[])

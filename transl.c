@@ -16,12 +16,12 @@ void TokenDump(token_t token)
 {
 	enum token_type type = token.token_type;
 
-	#define TYPE(name, kword) \
+	#define TOKEN_TYPE(name, kword) \
 	if (type == name) { \
 		printf("TYPE = %s", #name); \
 	}
 	#include "token_type.h"
-	#undef TYPE
+	#undef TOKEN_TYPE
 	if (token.token_kword == TOKEN_KWORD_pop)
 		printf(" POP");	
 	if (type == LABEL || type == LABEL_DEF || type == LABEL_VAL) {

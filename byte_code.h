@@ -23,18 +23,11 @@
 #define BYTE_JB 'b'
 #define BYTE_JE 'e'
 
-#define BYTE_REG_RAX 'k'
-#define BYTE_REG_RBX 'l'
-#define BYTE_REG_RCX 'm'
-#define BYTE_REG_RDX 'n'
-#define BYTE_REG_RSI 'o'
-#define BYTE_REG_RDI 'p'
-#define BYTE_REG_RSP 'q'
-#define BYTE_REG_RBP 'r'
-#define BYTE_REG_R9 's'
-#define BYTE_REG_R10 't'
-#define BYTE_REG_R11 'u'
-#define BYTE_REG_R12 'v'
-#define BYTE_REG_R13 'w'
-#define BYTE_REG_R14 'x'
-#define BYTE_REG_R15 'y'
+enum def_reg_bytes
+{
+	NOT_A_REGISTER = 'j',
+	#define DEF_REG(name, sym) BYTE_REG_##name,
+	#include "def_reg.h"	
+	#undef DEF_REG
+};
+
