@@ -8,52 +8,6 @@ long FileSize(FILE* in)
 	return file_size;
 }
 
-int Disassemble(char** bytecode)
-{
-	char* refresh = *bytecode;
-
-	do{
-		printf("%c", **bytecode);
-		(*bytecode)++;	
-		if (**bytecode == BYTE_END)
-			printf("%c", **bytecode);
-	}while(**bytecode != BYTE_END);
-
-	*bytecode = refresh;
-	printf("\n\nDISASSEMBLE\n\n");
-	do{
-
-		if (**bytecode == BYTE_PUSH_Q) {
-	
-			printf("push_q ");
-			(*bytecode)++;
-			printf("%lu\n", *((val_t*)(*bytecode)));
-		}
-		if (**bytecode == BYTE_PUSH_R) {
-			printf("push_r ");
-			(*bytecode)++;
-			printf("register\n");
-
-		}
-		if (**bytecode == BYTE_POP) {
-			printf("pop ");
-			(*bytecode)++;
-			printf("register\n");
-
-		}
-		if (**bytecode == BYTE_IN) {
-			printf("in\n");
-		}
-		if (**bytecode == BYTE_OUT) {
-			printf("out\n");
-		}
-		(*bytecode)++;
-
-	}while(**bytecode != BYTE_END);
-	
-	return 0;
-}
-
 int Execution(const char* filename) 
 {
 	FILE* in = fopen(filename, "r");
@@ -63,52 +17,51 @@ int Execution(const char* filename)
 	assert(bytecode != NULL);
 	fread(bytecode, 1, FileSize(in), in);
 
-	
-	//Disassemble(&byte_ptr);
-	
-	
-	#include "byte_code.h"
-
 	cpu_t* cpu = calloc(sizeof(cpu_t), 1);
-	cpu -> stack = calloc(sizeof(stack_t), 1);
-	StackInit(cpu -> stack);
-	cpu -> reg = calloc(sizeof(elem_t), 16);
-	cpu -> RAM = calloc(sizeof(elem_t), 256);
-	cpu -> rip = bytecode;
-	//char* ex = bytecode;
-		
+	cpu -> reg = calloc(sizeof(val_t), 16);
+	cpu -> RAM = calloc(sizeof(val_t), 256);
+	cpu -> rip = bytecode;	
+	val_t* cpu_stack = calloc(sizeof(val_t), STACK_SIZE);	
+	
 	int counter = 0;
 	while(1) {
-		#define WRITE_BYTE(sym, act) if (*(cpu -> rip) == sym) { act } 	
+		if (0) {}  
+		#define WRITE_BYTE(sym, act) else if (*(cpu->rip) == sym) { (cpu->rip)++; act}
 		#include "write_byte.h"
 		#undef WRITE_BYTE
-		//CpuDump(cpu);
+
+		//CpuDump(cpu, cpu_stack);
 	
-		if (counter == 20)
+		if (counter == 100)
 			//break;
 		counter++;
 	}
-	//CpuDump(cpu);
-	#undef DEF_REG
 
-	StackDestroy(cpu -> stack);
-	free(cpu -> stack);
+	//CpuDump(cpu);
+
 	free(cpu -> reg);
+	free(cpu_stack);
 	free(cpu -> RAM);
 	free(cpu);
 	free(bytecode);
 	fclose(in);
+
 	return 0;	
 }
 
-void CpuDump(cpu_t* cpu) 
+void CpuDump(cpu_t* cpu, val_t* cpu_stack) 
 {
 	printf("\nCPU DUMP\n");
 	for (int i = 0; i < 16; ++i) {
 		printf("reg %d = %lu\n", i + 1, (cpu -> reg)[i]);
 	}
-	StackDump(cpu -> stack);
+	printf("STACK: {\n");
+	for (val_t i = 0; i < cpu -> reg[CPU_REG_rsp]; ++i) {
+		printf("\t[%lu] = %lu\n", i, cpu_stack[i]);
+	}
+	printf("STACK: }\n\n");
 	printf("RIP = %c\n", *(cpu -> rip));
+	printf("\n\n\n\n");
 	//printf("\nRAM\n");
 	//printf("[ ");
 	//for (int i = 0; i < RAM_SIZE; ++i) {
