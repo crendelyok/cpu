@@ -1,0 +1,11 @@
+complie.c is a compliator. 
+It requires for a code in assembler then complies it.
+Complile bytecode's name is "binary".
+compile.c (complile.h") needs "cvector.c", "transl.h", "transl.c", 
+				"def_reg.h", "def_syntax.h", 
+				"token_type.h", "def_kword.h"
+Comilation of compile.c: gcc compile.c transl.c 
+
+
+main.c takes a binary file(e.g. binary from complice.c) and executes it 
+cpu.c (cpu.h) describes functions for execution

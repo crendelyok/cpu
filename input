@@ -1,0 +1,24 @@
+in 
+push rax
+push rax
+
+pop rsi
+
+call fib
+
+end
+
+fib
+
+push rsi
+pop rax
+out
+
+
+pop rsp
+push rbp
+
+
+jne 
+
+ret

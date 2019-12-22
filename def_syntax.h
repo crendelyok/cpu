@@ -1,0 +1,5 @@
+SYNTAX(END, ";")
+SYNTAX(LBR, "[")
+SYNTAX(RBR, "]")
+SYNTAX(PLUS, "+")
+
