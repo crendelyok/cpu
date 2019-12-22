@@ -1,0 +1,25 @@
+push 12
+push 312
+pop rax
+
+vmcall
+
+
+push 0
+pop rax
+push 0
+pop rsi
+
+vmcall
+
+push 1
+pop rax
+push 0
+pop rsi
+
+vmcall
+
+push 2
+pop rax
+
+vmcall

@@ -1,5 +1,6 @@
 #define BYTE_END '#'
 #define NULL_ADD '@'
+#define BYTE_VMCALL '^'
 
 #define BYTE_PUSH_Q 'A'
 #define BYTE_PUSH_R 'B'

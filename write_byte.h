@@ -103,3 +103,23 @@ WRITE_BYTE(BYTE_CALL,
 WRITE_BYTE(BYTE_RET,
 	(cpu -> rip) = bytecode + cpu_stack[--cpu -> reg[CPU_REG_rsp]];
 )
+WRITE_BYTE(BYTE_VMCALL,
+	val_t elem = 0;
+	val_t address = cpu -> reg[CPU_REG_rsi];
+	switch (cpu -> reg[CPU_REG_rax]) {
+	case 0:
+		cpu -> reg[CPU_REG_rax] = (val_t)scanf("%lu", &elem);
+		cpu_stack[address] = elem;
+		break;
+	case 1:
+		cpu -> reg[CPU_REG_rax] = (val_t)printf("%lu", cpu_stack[cpu -> reg[CPU_REG_rsi]]);
+		break;
+
+	case 2:
+		exit(cpu -> reg[CPU_REG_rsi]);		
+		break;
+	default: 
+		printf("No vmcall with this number\n");
+		break;
+	}
+)

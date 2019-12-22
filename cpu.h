@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #define RAM_SIZE 16
 #define STACK_SIZE 4096

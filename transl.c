@@ -60,6 +60,12 @@ char* GetBinaryFromFile(const char* file_name)
 	char* bytecode = (char*)calloc(FileSize(in) * 8, 1);
 	char* byte_ptr = bytecode;
 
+	/*
+	foreach_in_vec(&token_vec, token_t){
+		TokenDump(*__ptr);
+	}
+	*/
+
 	FirstPass(bytecode, &byte_ptr, &token_vec, &label_vec);
 	
 	/*
@@ -72,11 +78,14 @@ char* GetBinaryFromFile(const char* file_name)
 
 	SecondPass(&byte_ptr, &token_vec, &label_vec);
 
+	/*
 	int i = 0;
+	
 	foreach_in_vec(&token_vec, token_t) {
 		TokenDump(vector_elem(&token_vec, i));
 		++i;
 	}
+	*/
 
 	FILE* out = fopen("binary", "w");
 	fwrite(bytecode, 1, byte_size, out);
@@ -224,6 +233,10 @@ int FirstPass(char* bytecode, char** byte_ptr, tvec_t* token_vec, lvec_t* label_
 			ptr--;
 			
 			if (ptr -> token_type == CMD) {
+				if (ptr -> token_kword == TOKEN_KWORD_vmcall) {
+					**byte_ptr = BYTE_VMCALL;
+					(*byte_ptr)++;
+				}			
 				if (ptr -> token_kword == TOKEN_KWORD_in) {
 					**byte_ptr = BYTE_IN;
 					(*byte_ptr)++;
@@ -376,38 +389,38 @@ int GetToken(char** cur_char, tvec_t* token_vec, lvec_t* label_vec)
 	}
 		
 	
-	#define DEF_KWORD(name)                         \
+	#define DEF_KWORD(name)                                      \
 		if (strncmp(*cur_char, #name, strlen(#name)) == 0) { \
-			*cur_char += strlen(#name);                \
-			elem.token_type = CMD;		         \
-			elem.token_kword = TOKEN_KWORD_##name;     \
-			vector_push_back(token_vec, elem);             \
-			GetToken(cur_char, token_vec, label_vec );\
-			return CMD;			         \
+			*cur_char += strlen(#name);                  \
+			elem.token_type = CMD;		             \
+			elem.token_kword = TOKEN_KWORD_##name;       \
+			vector_push_back(token_vec, elem);           \
+			GetToken(cur_char, token_vec, label_vec );   \
+			return CMD;			             \
 		}
 	#include "def_kword.h"
 	#undef DEF_KWORD
 	
-	#define DEF_REG(name, byte)                                    \
-		if (strncmp(*cur_char, #name, strlen(#name)) == 0) {   \
-			*cur_char += strlen(#name);                    \
-			elem.token_type = REG;		               \
-			elem.token_register = TOKEN_REG_##name;             \
-			vector_push_back(token_vec, elem);                   \
-			GetToken(cur_char, token_vec, label_vec);  \
-			return REG;			               \
+	#define DEF_REG(name, byte)                                  \
+		if (strncmp(*cur_char, #name, strlen(#name)) == 0) { \
+			*cur_char += strlen(#name);                  \
+			elem.token_type = REG;		             \
+			elem.token_register = TOKEN_REG_##name;      \
+			vector_push_back(token_vec, elem);           \
+			GetToken(cur_char, token_vec, label_vec);    \
+			return REG;			             \
 		}
 	#include "def_reg.h"
 	#undef DEF_REG
 	
-	#define SYNTAX(name, sym)                                      \
-		if (strncmp(*cur_char, sym, strlen(sym)) == 0) {   \
+	#define SYNTAX(name, sym)                                    \
+		if (strncmp(*cur_char, sym, strlen(sym)) == 0) {     \
 			*cur_char += strlen(sym);                    \
-			elem.token_type = SYNT;		               \
-			elem.token_synt = TOKEN_SYNT_##name;           \
-			vector_push_back(token_vec, elem);                   \
-			GetToken(cur_char, token_vec, label_vec);                    \
-			return SYNT;			               \
+			elem.token_type = SYNT;		             \
+			elem.token_synt = TOKEN_SYNT_##name;         \
+			vector_push_back(token_vec, elem);           \
+			GetToken(cur_char, token_vec, label_vec);    \
+			return SYNT;			             \
 		}
 	#include "def_syntax.h"
 	#undef SYNTAX
